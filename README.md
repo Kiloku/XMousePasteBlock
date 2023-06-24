@@ -49,12 +49,5 @@ Note: If you're using any kind of clipboard manager, make sure your it does not 
 E.g. "Klipper" does that by default with the option "Prevent empty clipboard".
 
 ## Known issues
-In case of devices which are configured with middle mouse button hold-to-scroll (e.g. Trackpoints), it may happen that the primary selection clear action gets fired too late on older and slower machines.
-You can observe the behavior by building with the DEBUG flag set (`make debug`), running `xmousepasteblock` in a shell and watching the debug output as you long press and hold the mouse buttons.
-
-This is due to the fact that the XI_RawButtonPress event only gets fired _after_ releasing the middle mouse button (in case the user wanted to execute a scroll action).
-The only option to work around this is to disable the middle mouse button hold-to-scroll functionality on Trackpoint devices (which is often not desirable).
-To do so (using _libinput_):
-```
-xinput set-prop <device id> 'libinput Button Scrolling Button' 0
-```
+Does not support remapped mouse buttons, e.g. via
+`xinput set-button-map`
