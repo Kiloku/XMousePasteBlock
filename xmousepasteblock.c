@@ -27,7 +27,7 @@
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
 #include <X11/extensions/XInput2.h>
-
+//#define DEBUG
 static Display *display;
 static struct ev_io *x_watcher;
 static struct ev_check *x_check;
@@ -52,17 +52,25 @@ void init_xinput(void) {
 }
 
 void init_eventmask(void) {
-    XIEventMask masks[1];
+    XIEventMask masks[2];
     unsigned char mask[(XI_LASTEVENT + 7)/8];
 
     memset(mask, 0, sizeof(mask));
-    masks[0].deviceid = XIAllDevices;
+    masks[0].deviceid = XIAllMasterDevices;
     masks[0].mask_len = sizeof(mask);
     masks[0].mask = mask;
 
-    XISetMask(mask, XI_ButtonPress);
+    XISetMask(mask, XI_RawButtonPress);
 
-    XISelectEvents(display, DefaultRootWindow(display), masks, 1);
+    unsigned char maskr[(XI_LASTEVENT + 7)/8];
+    memset(maskr, 0, sizeof(maskr));
+    masks[1].deviceid = XIAllMasterDevices;
+    masks[1].mask_len = sizeof(maskr);
+    masks[1].mask = maskr;
+    
+    XISetMask(maskr, XI_RawButtonRelease);
+    
+    XISelectEvents(display, DefaultRootWindow(display), masks, 2);
     XFlush(display);
 }
 
